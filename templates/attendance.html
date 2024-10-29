@@ -1,0 +1,32 @@
+<!-- templates/attendance_system/attendance.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出勤退勤管理 - 出退勤システム</title>
+</head>
+<body>
+    <h2>出勤・退勤管理画面</h2>
+    <p>こんにちは、{{ request.user.username }}さん</p>
+
+    <div>
+        <p>日付: {{ attendance.date }}</p>
+        <p>出勤時間: {{ attendance.check_in|date:"H:i:s" }}</p>
+        <p>退勤時間: {{ attendance.check_out|date:"H:i:s" }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {% if not attendance.check_in %}
+            <button type="submit" name="check_in">出勤</button>
+        {% elif not attendance.check_out %}
+            <button type="submit" name="check_out">退勤</button>
+        {% else %}
+            <p>本日の勤務は完了しています。</p>
+        {% endif %}
+    </form>
+
+    <p><a href="{% url 'welcome' %}">ホームに戻る</a></p>
+</body>
+</html>
