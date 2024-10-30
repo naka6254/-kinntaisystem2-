@@ -1,0 +1,20 @@
+<!-- templates/attendance_system/edit_attendance.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>出退勤の編集</title>
+</head>
+<body>
+    <h2>出退勤の編集</h2>
+    <p>日付: {{ attendance.date }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">保存</button>
+    </form>
+    
+    <p><a href="{% url 'attendance' %}">出勤管理画面に戻る</a></p>
+</body>
+</html>

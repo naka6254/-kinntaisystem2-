@@ -26,6 +26,7 @@
             <p>本日の勤務は完了しています。</p>
         {% endif %}
     </form>
+    <p><a href="{% url 'edit_attendance' attendance.id %}">出退勤修正</a></p>
     <p><a href="{% url 'update_profile' %}">ユーザー情報を更新</a></p>
     <p><a href="{% url 'welcome' %}">ホームに戻る</a></p>
 </body>
