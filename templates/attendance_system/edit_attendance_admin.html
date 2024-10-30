@@ -1,0 +1,22 @@
+<!-- templates/attendance_system/edit_attendance_admin.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>出退勤の承認</title>
+</head>
+<body>
+    <h2>出退勤の承認</h2>
+    <p>日付: {{ attendance.date }}</p>
+    <p>出勤時間: {{ attendance.check_in }}</p>
+    <p>退勤時間: {{ attendance.check_out }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="approve">承認</button>
+        <button type="submit" name="resubmit">再提出</button>
+    </form>
+
+    <p><a href="{% url 'attendance' %}">出勤管理画面に戻る</a></p>
+</body>
+</html>
