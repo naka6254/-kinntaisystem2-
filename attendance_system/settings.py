@@ -127,3 +127,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = 'welcome'  # ログイン後のリダイレクト先
 LOGOUT_REDIRECT_URL = 'welcome'  # ログアウト後のリダイレクト先
+LOGIN_REDIRECT_URL = 'attendance' 
