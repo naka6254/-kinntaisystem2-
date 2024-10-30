@@ -1,0 +1,17 @@
+<!-- templates/attendance_system/update_profile.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ユーザー情報の更新</title>
+</head>
+<body>
+    <h2>ユーザー情報の更新</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">更新</button>
+    </form>
+    <p><a href="{% url 'attendance' %}">出勤管理画面に戻る</a></p>
+</body>
+</html>

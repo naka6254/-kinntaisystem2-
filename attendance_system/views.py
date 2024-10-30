@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.contrib.auth import login
 from .forms import CustomUserCreationForm
+from .forms import CustomUserChangeForm 
 from django.contrib.auth.decorators import login_required
 from .models import Attendance
 
@@ -17,6 +18,16 @@ def register(request):
         form = CustomUserCreationForm()
     return render(request, 'attendance_system/register.html', {'form': form})
 
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('attendance')  # 出勤管理画面にリダイレクト
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    return render(request, 'attendance_system/update_profile.html', {'form': form})
 def welcome(request):
     return render(request, 'attendance_system/welcome.html')
 
