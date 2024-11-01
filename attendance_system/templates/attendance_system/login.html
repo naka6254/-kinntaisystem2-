@@ -1,0 +1,38 @@
+{% extends 'admin/base.html' %}
+{% load custom_filters %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>ログイン</h2>
+    
+    {% if form.errors %}
+        <p class="error-message">ユーザー名とパスワードが一致しません。</p>
+    {% endif %}
+    
+    {% if next %}
+        {% if user.is_authenticated %}
+            <p>アクセス権のあるアカウントでログインしてください。</p>
+        {% else %}
+            <p>ログインしてください。</p>
+        {% endif %}
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        
+        <label for="名前">{{ form.username.label }}</label>
+        {{ form.username|add_class:"form-control" }}
+        
+        <label for="パスワード">{{ form.password.label }}</label>
+        {{ form.password|add_class:"form-control" }}
+        
+        <button type="submit" class="btn btn-primary">ログイン</button>
+        <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+</div>
+{% endblock %}
