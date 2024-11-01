@@ -4,39 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>出勤退勤管理 - 出退勤システム</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <center>
-        <h2>出勤・退勤管理画面</h2>
-        <p>こんにちは、{{ request.user.username }}さん</p>
-
-        <div>
-            <p>日付: {{ attendance.date }}</p>
-            <p>出勤時間: {{ attendance.check_in|date:"H:i:s" }}</p>
-            <p>退勤時間: {{ attendance.check_out|date:"H:i:s" }}</p>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="text-center mb-4">
+            <h2 class="text-primary">出勤・退勤管理画面</h2>
+            <p class="lead">こんにちは、<strong>{{ request.user.username }}</strong>さん</p>
         </div>
 
-        <form method="post">
-            {% csrf_token %}
-            {% if not attendance.check_in %}
-                <button type="submit" name="check_in">出勤</button>
-            {% elif not attendance.check_out %}
-                <button type="submit" name="check_out">退勤</button>
-            {% else %}
-                <p>本日の勤務は完了しています。</p>
+        <div class="card mx-auto" style="max-width: 500px;">
+            <div class="card-body">
+                <h5 class="card-title">本日の出退勤状況</h5>
+                <p class="card-text">日付: {{ attendance.date|date:"Y年m月d日" }}</p>
+                <p class="card-text">出勤時間: {{ attendance.check_in|date:"H:i:s" }}</p>
+                <p class="card-text">退勤時間: {{ attendance.check_out|date:"H:i:s" }}</p>
+                
+                <form method="post" class="text-center">
+                    {% csrf_token %}
+                    {% if not attendance.check_in %}
+                        <button type="submit" name="check_in" class="btn btn-success w-100">出勤</button>
+                    {% elif not attendance.check_out %}
+                        <button type="submit" name="check_out" class="btn btn-danger w-100">退勤</button>
+                    {% else %}
+                        <p class="text-muted">本日の勤務は完了しています。</p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            {% if is_admin %}
+                <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-primary">出退勤の承認</a>
+            {% elif is_manager %}
+                <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-primary">出退勤の編集</a>
             {% endif %}
-        </form>
+            
+            <div class="mt-3">
+                <a href="{% url 'update_profile' %}" class="btn btn-secondary">ユーザー情報を更新</a>
+                <a href="{% url 'welcome' %}" class="btn btn-outline-secondary">ログアウト</a>
+            </div>
+        </div>
+    </div>
 
-        {% if is_admin %}
-            <p><a href="{% url 'edit_attendance' attendance.id %}">出退勤の承認</a></p>
-        {% elif is_manager %}
-            <p><a href="{% url 'edit_attendance' attendance.id %}">出退勤の編集</a></p>
-        {% elif is_employee %}
-            <p><a href="{% url 'edit_attendance' attendance.id %}">自身の出退勤</a></p>
-        {% endif %}
-
-        <p><a href="{% url 'update_profile' %}">ユーザー情報を更新</a></p>
-        <p><a href="{% url 'welcome' %}">ログアウト</a></p>
-    </center>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
