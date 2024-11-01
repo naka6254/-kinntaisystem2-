@@ -14,7 +14,7 @@
         <form method="post" class="card p-4 bg-white shadow-sm">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="username" class="form-label">{{ form.username.label }}</label>
+                <label for="username" class="form-label">名前</label>
                 {{ form.username|add_class:"form-control" }}
                 {% if form.username.errors %}
                     <div class="text-danger small">
@@ -24,7 +24,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">{{ form.email.label }}</label>
+                <label for="email" class="form-label">メールアドレス</label>
                 {{ form.email|add_class:"form-control" }}
                 {% if form.email.errors %}
                     <div class="text-danger small">
@@ -34,7 +34,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="password1" class="form-label">{{ form.password1.label }}</label>
+                <label for="password1" class="form-label">パスワード</label>
                 {{ form.password1|add_class:"form-control" }}
                 {% if form.password1.errors %}
                     <div class="text-danger small">
@@ -44,7 +44,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="password2" class="form-label">{{ form.password2.label }}</label>
+                <label for="password2" class="form-label">パスワード２回目</label>
                 {{ form.password2|add_class:"form-control" }}
                 {% if form.password2.errors %}
                     <div class="text-danger small">

@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .forms import CustomUserCreationForm, CustomUserChangeForm, AttendanceEditForm
 from .models import Attendance
+from django.contrib.auth.decorators import login_required, user_passes_test
+
 
 def register(request):
     if request.method == 'POST':
@@ -104,3 +106,25 @@ def edit_attendance(request, attendance_id):
     # 該当グループに所属しないユーザーはアクセス禁止
     else:
         return redirect('attendance')
+    
+def approve_attendance(request, attendance_id):  
+    
+    attendance = get_object_or_404(Attendance, id=attendance_id)
+
+    if request.method == 'POST':
+        if 'approve' in request.POST:
+            attendance.status = '承認済み'
+            attendance.save()
+        elif 'resubmit' in request.POST:
+            attendance.status = '再提出'
+            attendance.save()
+
+    return redirect('attendance')
+
+
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='幹部クラス').exists())
+def attendance_approval(request):
+    # Attendanceモデルから全社員の出退勤データを取得
+    attendances = Attendance.objects.all()
+    return render(request, 'attendance_system/edit_attendance_admin.html', {'attendances': attendances})

@@ -27,7 +27,7 @@
         {% csrf_token %}
         
         <div class="mb-3">
-            <label for="username" class="form-label">{{ form.username.label }}</label>
+            <label for="username" class="form-label"> 社員名</label>
             {{ form.username|add_class:"form-control" }}
             {% if form.username.errors %}
                 <div class="text-danger small">{{ form.username.errors|join:"<br>" }}</div>
@@ -35,7 +35,7 @@
         </div>
         
         <div class="mb-3">
-            <label for="password" class="form-label">{{ form.password.label }}</label>
+            <label for="password" class="form-label">パスワード</label>
             {{ form.password|add_class:"form-control" }}
             {% if form.password.errors %}
                 <div class="text-danger small">{{ form.password.errors|join:"<br>" }}</div>

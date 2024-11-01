@@ -14,7 +14,7 @@
             {% csrf_token %}
             
             <div class="mb-3">
-                <label for="username" class="form-label">{{ form.username.label }}</label>
+                <label for="username" class="form-label">名前</label>
                 {{ form.username|add_class:"form-control" }}
                 {% if form.username.errors %}
                     <div class="text-danger small">
@@ -24,7 +24,7 @@
             </div>
 
             <div class="mb-3">
-                <label for="email" class="form-label">{{ form.email.label }}</label>
+                <label for="email" class="form-label">メールアドレス</label>
                 {{ form.email|add_class:"form-control" }}
                 {% if form.email.errors %}
                     <div class="text-danger small">
@@ -34,24 +34,26 @@
             </div>
 
             <div class="mb-3">
-                <label for="first_name" class="form-label">{{ form.first_name.label }}</label>
-                {{ form.first_name|add_class:"form-control" }}
-                {% if form.first_name.errors %}
+                <label for="password1" class="form-label">パスワード</label>  <!-- ラベルを「パスワード」に変更 -->
+                {{ form.password1|add_class:"form-control" }}  <!-- password1フィールドに置き換え -->
+                {% if form.password1.errors %}
                     <div class="text-danger small">
-                        {{ form.first_name.errors|join:"<br>" }}
+                        {{ form.password1.errors|join:"<br>" }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="password2" class="form-label">パスワード２回目</label>  <!-- ラベルを「パスワード（確認用）」に変更 -->
+                {{ form.password2|add_class:"form-control" }}  <!-- password2フィールドに置き換え -->
+                {% if form.password2.errors %}
+                    <div class="text-danger small">
+                        {{ form.password2.errors|join:"<br>" }}
                     </div>
                 {% endif %}
             </div>
 
-            <div class="mb-3">
-                <label for="last_name" class="form-label">{{ form.last_name.label }}</label>
-                {{ form.last_name|add_class:"form-control" }}
-                {% if form.last_name.errors %}
-                    <div class="text-danger small">
-                        {{ form.last_name.errors|join:"<br>" }}
-                    </div>
-                {% endif %}
-            </div>
+            
 
             <button type="submit" class="btn btn-primary w-100">更新</button>
         </form>

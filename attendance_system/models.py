@@ -9,6 +9,7 @@ class Attendance(models.Model):
     check_out = models.DateTimeField(null=True, blank=True)  # 退勤時間
     date = models.DateField(default=timezone.now)  # 日付
     status = models.BooleanField(default=False)  # 勤務中か否か
+    is_approved = models.BooleanField(default=False) 
 
     def __str__(self):
         return f"{self.user.username} - {self.date}"
