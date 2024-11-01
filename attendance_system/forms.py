@@ -20,8 +20,30 @@ class CustomUserCreationForm(UserCreationForm):
         fields = ['username', 'email', 'password1', 'password2'] 
 
 class CustomUserChangeForm(UserChangeForm):
+    password1 = forms.CharField(
+        label="新しいパスワード",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=False
+    )
+    password2 = forms.CharField(
+        label="新しいパスワード（確認用）",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=False
+    )
+
     class Meta:
         model = User
-        fields = ['username', 'email', 'first_name', 'last_name']
+        fields = ['username', 'email', 'password1', 'password2']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }
 
-   
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', "パスワードが一致しません。")
+        return cleaned_data
