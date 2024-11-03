@@ -24,11 +24,16 @@ def update_profile(request):
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)  # 一旦保存を遅延
+            if form.cleaned_data.get('password1'):
+                user.set_password(form.cleaned_data['password1'])  # パスワードをハッシュ化
+            user.save()
+            login(request, user)  # パスワード変更後に再ログイン
             return redirect('attendance')  # 出勤管理画面にリダイレクト
     else:
         form = CustomUserChangeForm(instance=request.user)
     return render(request, 'attendance_system/update_profile.html', {'form': form})
+
 
 def welcome(request):
     return render(request, 'attendance_system/welcome.html')
