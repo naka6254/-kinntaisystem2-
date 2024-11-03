@@ -6,6 +6,7 @@ from django.contrib.auth import login
 from .forms import CustomUserCreationForm, CustomUserChangeForm, AttendanceEditForm
 from .models import Attendance
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 
 
 def register(request):
@@ -29,6 +30,7 @@ def update_profile(request):
                 user.set_password(form.cleaned_data['password1'])  # パスワードをハッシュ化
             user.save()
             login(request, user)  # パスワード変更後に再ログイン
+            messages.success(request, "プロフィールが正常に更新されました！")
             return redirect('attendance')  # 出勤管理画面にリダイレクト
     else:
         form = CustomUserChangeForm(instance=request.user)
