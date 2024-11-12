@@ -9,13 +9,10 @@ class Attendance(models.Model):
     check_out = models.DateTimeField(null=True, blank=True)  # 退勤時間
     date = models.DateField(default=timezone.now)  # 日付
     status = models.BooleanField(default=False)  # 勤務中か否か
-    is_approved = models.BooleanField(default=False) 
+    is_approved = models.BooleanField(default=False)  # 承認状態
 
     def __str__(self):
-        return f"{self.user.username} - {self.date}"
-
-    def calculate_working_hours(self):
-        # 勤務時間の自動計算処理
-        if self.check_out:
-            return (self.check_out - self.check_in).total_seconds() / 3600
-        return 0
+        check_in_str = self.check_in.strftime("%H:%M") if self.check_in else "未設定"
+        check_out_str = self.check_out.strftime("%H:%M") if self.check_out else "未設定"
+        approval_status = "承認済み" if self.is_approved else "再提出"
+        return f"{self.user.username} - {self.date} (出勤: {check_in_str}, 退勤: {check_out_str}, 状態: {approval_status})"
