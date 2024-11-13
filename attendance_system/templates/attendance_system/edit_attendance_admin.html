@@ -59,7 +59,75 @@
     </style>
 </head>
 <body>
+    <!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>出退勤の承認</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        h2 {
+            margin: 20px 0;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
     <h2>出退勤の承認</h2>
+
+    <!-- メッセージ表示 -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
     <table>
         <thead>
@@ -81,8 +149,9 @@
                     <td>{{ attendance.check_in }}</td>
                     <td>{{ attendance.check_out }}</td>
                     <td>
-                        <form method="post" action="{% url 'approve_attendance' attendance.id %}">
+                        <form method="post" action=".">
                             {% csrf_token %}
+                            <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
                             <button type="submit" name="approve">承認</button>
                             <button type="submit" name="resubmit">再提出</button>
                         </form>

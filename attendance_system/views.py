@@ -7,6 +7,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm, AttendanceEditF
 from .models import Attendance
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 
 def register(request):
@@ -76,43 +77,41 @@ def edit_attendance(request, attendance_id):
     user = request.user
     attendance = get_object_or_404(Attendance, id=attendance_id)
 
-    # 幹部クラス（管理ユーザー）の場合
-    if user.groups.filter(name='幹部クラス').exists():
-        if request.method == 'POST':
-            if 'approve' in request.POST:
-                attendance.is_approved = True
-                attendance.save()
-            elif 'resubmit' in request.POST:
-                attendance.is_approved = False
-                attendance.save()
-            return redirect('attendance')  # 承認または再提出後のリダイレクト
-        return render(request, 'attendance_system/edit_attendance_admin.html', {'attendance': attendance})
+    # 中間管理職が閲覧できるデータを制限 (幹部クラスを除く)
+    manager_viewable_users = User.objects.exclude(groups__name='幹部クラス')
+    attendances = Attendance.objects.filter(user__in=manager_viewable_users)
 
-    # 中間管理職の場合
-    elif user.groups.filter(name='中間管理職').exists():
-        if request.method == 'POST':
-            form = AttendanceEditForm(request.POST, instance=attendance)
-            if form.is_valid():
-                form.save()
-                return redirect('attendance')
+    # 中間管理職のみがアクセス可能
+    if user.groups.filter(name='中間管理職').exists():
+        # 編集対象ユーザーが幹部クラスに属していないかを確認
+        if not attendance.user.groups.filter(name='幹部クラス').exists():
+            if request.method == 'POST':
+                form = AttendanceEditForm(request.POST, instance=attendance)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "出退勤データが更新されました。")
+                    return redirect('attendance_approval')  # 編集後に管理画面にリダイレクト
+            else:
+                form = AttendanceEditForm(instance=attendance)
+
+            # 中間管理職用テンプレートにフォームと制限された出退勤データを渡す
+            return render(request, 'attendance_system/edit_attendance_manager.html', {
+                'form': form,
+                'attendance': attendance,
+                'attendances': attendances,  # フィルタリングされた出退勤データ
+            })
+
         else:
-            form = AttendanceEditForm(instance=attendance)
-        return render(request, 'attendance_system/edit_attendance_manager.html', {'form': form, 'attendance': attendance})
+            # 幹部クラスの出退勤情報にはアクセスできない
+            messages.error(request, "幹部クラスの出退勤データは編集できません。")
+            return redirect('attendance_approval')
 
-    # 一般社員の場合
-    elif user.groups.filter(name='一般社員').exists():
-        if request.method == 'POST':
-            form = AttendanceEditForm(request.POST, instance=attendance)
-            if form.is_valid():
-                form.save()
-                return redirect('attendance')
-        else:
-            form = AttendanceEditForm(instance=attendance)
-        return render(request, 'attendance_system/edit_attendance_employee.html', {'form': form, 'attendance': attendance})
-
-    # 該当グループに所属しないユーザーはアクセス禁止
+    # 中間管理職以外のユーザーはアクセス不可
     else:
-        return redirect('attendance')
+        messages.error(request, "編集権限がありません。")
+        return redirect('attendance_approval')
+
+   
     
 def approve_attendance(request, attendance_id):  
     
