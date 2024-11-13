@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>出退勤の承認</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+        h2 {
+            margin: 20px 0;
+        }
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 2px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h2>出退勤の承認</h2>
+
+    <!-- メッセージ表示 -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>社員名</th>
+                <th>日付</th>
+                <th>出勤時間</th>
+                <th>退勤時間</th>
+                <th>操作</th>
+                <th>承認状態</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if attendances %}
+                {% for attendance in attendances %}
+                <tr>
+                    <td>{{ attendance.user.username }}</td>
+                    <td>{{ attendance.date }}</td>
+                    <td>{{ attendance.check_in }}</td>
+                    <td>{{ attendance.check_out }}</td>
+                    <td>
+                        <form method="post" action=".">
+                            {% csrf_token %}
+                            <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
+                            <button type="submit" name="approve">承認</button>
+                            <button type="submit" name="resubmit">再提出</button>
+                        </form>
+                    </td>
+                    <td>{{ attendance.is_approved|yesno:"承認済み,未承認" }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="6">出退勤データがありません</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <p><a href="{% url 'attendance' %}">出勤管理画面に戻る</a></p>
+</body>
+</html>

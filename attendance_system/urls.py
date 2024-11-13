@@ -29,4 +29,7 @@ urlpatterns = [
     path('update_profile/', views.update_profile, name='update_profile'), 
     path('attendance/edit/<int:attendance_id>/', views.edit_attendance, name='edit_attendance'), 
     path('attendance/approve/<int:attendance_id>/', views.approve_attendance, name='approve_attendance'),
+    path('attendance/approval/', views.attendance_approval, name='attendance_approval'),
+    
+
 ]

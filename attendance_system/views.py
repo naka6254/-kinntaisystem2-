@@ -120,12 +120,12 @@ def approve_attendance(request, attendance_id):
 
     if request.method == 'POST':
         if 'approve' in request.POST:
-            attendance.status = '承認済み'
+            attendance.is_approved = True  # 承認済みに設定
             attendance.save()
         elif 'resubmit' in request.POST:
-            attendance.status = '再提出'
+            attendance.is_approved = False  # 再提出に設定
             attendance.save()
-
+            
     return redirect('attendance')
 
 
@@ -135,3 +135,26 @@ def attendance_approval(request):
     # Attendanceモデルから全社員の出退勤データを取得
     attendances = Attendance.objects.all()
     return render(request, 'attendance_system/edit_attendance_admin.html', {'attendances': attendances})
+
+
+@login_required
+def attendance_approval(request):
+    # 全ての出退勤データを取得してテンプレートに渡す
+    attendances = Attendance.objects.all()
+
+    if request.method == 'POST':
+        attendance_id = request.POST.get('attendance_id')
+        attendance = get_object_or_404(Attendance, id=attendance_id)
+        
+        if 'approve' in request.POST:
+            attendance.is_approved = True  # 承認済みに設定
+            messages.success(request, f"{attendance.user.username} さんの出退勤が承認されました。")
+        elif 'resubmit' in request.POST:
+            attendance.is_approved = False  # 再提出に設定
+            messages.warning(request, f"{attendance.user.username} さんの出退勤が再提出されました。")
+        
+        attendance.save()
+
+    # 同じテンプレートに出退勤データを渡して再表示
+    return render(request, 'attendance_system/attendance_approval.html', {'attendances': attendances})
+

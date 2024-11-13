@@ -46,7 +46,7 @@
 
         <div class="text-center mt-4">
             {% if is_admin %}
-                <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-primary">出退勤の承認</a>
+                <a href="{% url 'attendance_approval' %}" class="btn btn-primary">出退勤の承認</a>
             {% elif is_manager %}
                 <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-primary">出退勤の編集</a>
             {% endif %}
