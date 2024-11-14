@@ -47,3 +47,9 @@ class CustomUserChangeForm(UserChangeForm):
         if password1 and password2 and password1 != password2:
             self.add_error('password2', "パスワードが一致しません。")
         return cleaned_data
+
+
+class AttendanceForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        fields = ['check_in', 'check_out', ] 

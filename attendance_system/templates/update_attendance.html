@@ -1,0 +1,6 @@
+<h2>出席情報の更新</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">保存</button>
+</form>

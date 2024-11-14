@@ -31,7 +31,8 @@
                     <td>{{ attendance.is_approved|yesno:"承認済み,未承認" }}</td>
                     <td>
                         <!-- 編集ボタンを追加 -->
-                        <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-sm btn-primary">編集</a>
+                        <a href="{% url 'update_attendance' attendance.id %}" class="btn btn-sm btn-primary">更新</a>
+
                     </td>
                 </tr>
                 {% endfor %}

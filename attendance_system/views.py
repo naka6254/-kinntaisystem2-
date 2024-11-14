@@ -8,6 +8,8 @@ from .models import Attendance
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import User
+from .forms import AttendanceForm
+
 
 
 def register(request):
@@ -111,7 +113,18 @@ def edit_attendance(request, attendance_id):
         messages.error(request, "編集権限がありません。")
         return redirect('attendance_approval')
 
-   
+def update_attendance(request, id):
+    attendance = get_object_or_404(Attendance, id=id)
+
+    if request.method == "POST":
+        form = AttendanceForm(request.POST, instance=attendance)
+        if form.is_valid():
+            form.save()
+            return redirect('attendance_list')  # 保存後のリダイレクト先
+    else:
+        form = AttendanceForm(instance=attendance)
+
+    return render(request, 'update_attendance.html', {'form': form})  
     
 def approve_attendance(request, attendance_id):  
     
