@@ -3,6 +3,8 @@ from django import forms
 from .models import Attendance
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.core.exceptions import ValidationError
+
 
 class AttendanceEditForm(forms.ModelForm):
     class Meta:
@@ -68,14 +70,30 @@ class CustomUserChangeForm(UserChangeForm):
 class AttendanceForm(forms.ModelForm):
     class Meta:
         model = Attendance
-        fields = ['check_in', 'check_out', ] 
+        fields = ['check_in', 'check_out']
         widgets = {
             'check_in': forms.DateTimeInput(attrs={
-                'type': 'datetime-local', 
+                'type': 'datetime-local',
                 'class': 'form-control'
             }),
             'check_out': forms.DateTimeInput(attrs={
-                'type': 'datetime-local', 
+                'type': 'datetime-local',
                 'class': 'form-control'
             }),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        check_in = cleaned_data.get('check_in')
+        check_out = cleaned_data.get('check_out')
+
+        # 出勤時間が退勤時間より後の場合
+        if check_in and check_out:
+            if check_in >= check_out:
+                raise ValidationError("出勤時間は退勤時間よりも前である必要があります。")
+
+            # 出勤日と退勤日が異なる日付の場合
+            if check_in.date() != check_out.date():
+                raise ValidationError("出勤日と退勤日は同じである必要があります。")
+
+        return cleaned_data
