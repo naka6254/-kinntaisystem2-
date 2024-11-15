@@ -120,7 +120,7 @@ def update_attendance(request, id):
         form = AttendanceForm(request.POST, instance=attendance)
         if form.is_valid():
             form.save()
-            return redirect('attendance_list')  # 保存後のリダイレクト先
+            return redirect(f'/attendance/edit/{id}/') 
     else:
         form = AttendanceForm(instance=attendance)
 
