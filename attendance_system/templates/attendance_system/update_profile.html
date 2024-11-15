@@ -13,6 +13,14 @@
         <form method="post" class="card p-4 bg-white shadow-sm">
             {% csrf_token %}
             
+            <!-- フォーム全体のエラーを表示 -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors|join:"<br>" }}
+            </div>
+            {% endif %}
+        
+            <!-- 各フィールド -->
             <div class="mb-3">
                 <label for="username" class="form-label">名前</label>
                 {{ form.username|add_class:"form-control" }}
@@ -22,7 +30,7 @@
                     </div>
                 {% endif %}
             </div>
-
+        
             <div class="mb-3">
                 <label for="email" class="form-label">メールアドレス</label>
                 {{ form.email|add_class:"form-control" }}
@@ -32,10 +40,10 @@
                     </div>
                 {% endif %}
             </div>
-
+        
             <div class="mb-3">
-                <label for="password1" class="form-label">パスワード</label>  <!-- ラベルを「パスワード」に変更 -->
-                {{ form.password1|add_class:"form-control" }}  <!-- password1フィールドに置き換え -->
+                <label for="password1" class="form-label">新しいパスワード</label>
+                {{ form.password1|add_class:"form-control" }}
                 {% if form.password1.errors %}
                     <div class="text-danger small">
                         {{ form.password1.errors|join:"<br>" }}
@@ -44,19 +52,18 @@
             </div>
             
             <div class="mb-3">
-                <label for="password2" class="form-label">パスワード２回目</label>  <!-- ラベルを「パスワード（確認用）」に変更 -->
-                {{ form.password2|add_class:"form-control" }}  <!-- password2フィールドに置き換え -->
+                <label for="password2" class="form-label">新しいパスワード（確認用）</label>
+                {{ form.password2|add_class:"form-control" }}
                 {% if form.password2.errors %}
                     <div class="text-danger small">
                         {{ form.password2.errors|join:"<br>" }}
                     </div>
                 {% endif %}
             </div>
-
-            
-
+        
             <button type="submit" class="btn btn-primary w-100">更新</button>
         </form>
+        
         
         <p class="mt-3 text-center"><a href="{% url 'attendance' %}">出勤管理画面に戻る</a></p>
     </div>

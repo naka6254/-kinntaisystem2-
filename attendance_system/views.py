@@ -17,6 +17,7 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            messages.success(request, "ユーザー登録が完了しました。ログインしてください。")
             login(request, user)  # 登録後に自動ログイン
             return redirect('welcome')  # 登録成功後にウェルカムページへリダイレクト
     else:
@@ -120,6 +121,7 @@ def update_attendance(request, id):
         form = AttendanceForm(request.POST, instance=attendance)
         if form.is_valid():
             form.save()
+            messages.success(request, "更新されました！")
             return redirect(f'/attendance/edit/{id}/') 
     else:
         form = AttendanceForm(instance=attendance)

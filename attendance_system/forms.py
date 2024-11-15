@@ -18,7 +18,6 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2'] 
-
 class CustomUserChangeForm(UserChangeForm):
     password1 = forms.CharField(
         label="新しいパスワード",
@@ -43,10 +42,27 @@ class CustomUserChangeForm(UserChangeForm):
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
         password2 = cleaned_data.get("password2")
+        username = cleaned_data.get("username")
+        email = cleaned_data.get("email")
+        
+        if not username:
+           self.add_error('username', "名前を入力してください。")
 
+    
+        if not email:
+           self.add_error('email', "メールアドレスを入力してください。")
+
+        if password1 and not password2:
+            self.add_error('password2', "確認用パスワードを入力してください。")
+        if password2 and not password1:
+            self.add_error('password1', "パスワードを入力してください。")
         if password1 and password2 and password1 != password2:
             self.add_error('password2', "パスワードが一致しません。")
+        if not password1 and not password2:
+            raise forms.ValidationError("新しいパスワードを入力してください。")
+
         return cleaned_data
+
 
 
 class AttendanceForm(forms.ModelForm):
