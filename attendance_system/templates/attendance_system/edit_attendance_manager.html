@@ -37,7 +37,18 @@
                     <td>{{ attendance.date }}</td>
                     <td>{{ attendance.check_in }}</td>
                     <td>{{ attendance.check_out }}</td>
-                    <td>{{ attendance.is_approved|yesno:"承認済み,未承認" }}</td>
+                    <td>
+                        {% if not attendance.check_in and not attendance.check_out %}
+                            未更新
+                        {% elif attendance.is_approved is None %}
+                            申請中
+                        {% elif attendance.is_approved %}
+                            承認済み
+                        {% else %}
+                            再提出
+                        {% endif %}
+                    </td>
+                
                     <td>
                         <!-- 編集ボタンを追加 -->
                         <a href="{% url 'update_attendance' attendance.id %}" class="btn btn-sm btn-primary">更新</a>

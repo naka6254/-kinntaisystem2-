@@ -83,21 +83,20 @@
             {% if attendances %}
                 {% for attendance in attendances %}
                 <tr>
-                    {% load custom_filters %}
-
                     <td>{{ attendance.user.username }}</td>
                     <td>{% if attendance.date %}{{ attendance.date }}{% endif %}</td>
                     <td>{% if attendance.check_in %}{{ attendance.check_in }}{% endif %}</td>
                     <td>{% if attendance.check_out %}{{ attendance.check_out }}{% endif %}</td>
                     <td>
+                        <!-- ボタンフォームを挿入 -->
                         <form method="post" action=".">
                             {% csrf_token %}
                             <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
-                            <button type="submit" name="approve">承認</button>
-                            <button type="submit" name="resubmit">再提出</button>
+                            <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">承認</button>
+                            <button type="submit" name="action" value="resubmit" class="btn btn-warning btn-sm">再提出</button>
                         </form>
                     </td>
-                    <td>{{ attendance.is_approved|yesno:"承認済み,未承認" }}</td>
+                    <td>{{ attendance.status_display }}</td> <!-- 状態表示を統一 -->
                 </tr>
                 {% endfor %}
             {% else %}

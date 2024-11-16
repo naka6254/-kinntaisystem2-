@@ -153,30 +153,18 @@ def attendance_approval(request):
 
 @login_required
 def attendance_approval(request):
-    # 全ての出退勤データを取得してテンプレートに渡す
     attendances = Attendance.objects.all()
 
-    if request.method == 'POST':
-        attendance_id = request.POST.get('attendance_id')
+    if request.method == "POST":
+        attendance_id = request.POST.get("attendance_id")
+        action = request.POST.get("action")
         attendance = get_object_or_404(Attendance, id=attendance_id)
-        
-        if 'approve' in request.POST:
-            attendance.is_approved = True  # 承認済みに設定
+
+        if action == "approve":
+            attendance.approve()
             messages.success(request, f"{attendance.user.username} さんの出退勤が承認されました。")
-        elif 'resubmit' in request.POST:
-            attendance.is_approved = False  # 再提出に設定
+        elif action == "resubmit":
+            attendance.reject()
             messages.warning(request, f"{attendance.user.username} さんの出退勤が再提出されました。")
-        
-        attendance.save()
 
-        for attendance in attendances:
-          if attendance.date is None or attendance.date == "":
-             attendance.date = None  # 空に戻す
-          if attendance.check_in is None or attendance.check_in == "":
-             attendance.check_in = None  # 空に戻す
-          if attendance.check_out is None or attendance.check_out == "":
-             attendance.check_out = None  # 空に戻す
-
-    # 同じテンプレートに出退勤データを渡して再表示
-    return render(request, 'attendance_system/attendance_approval.html', {'attendances': attendances})
-
+    return render(request, "attendance_system/attendance_approval.html", {"attendances": attendances})
