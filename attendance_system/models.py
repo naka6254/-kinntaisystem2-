@@ -10,6 +10,7 @@ class Attendance(models.Model):
     date = models.DateField(default=timezone.now)  # 日付
     status = models.BooleanField(default=False)  # 勤務中か否か
     is_approved = models.BooleanField(default=False)  # 承認状態
+    status = models.CharField(max_length=20, null=True, blank=True, default="未設定")
 
     def __str__(self):
         check_in_str = self.check_in.strftime("%H:%M") if self.check_in else "未設定"

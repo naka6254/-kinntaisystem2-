@@ -10,3 +10,7 @@ def add_class(field, css_class):
         return field.as_widget(attrs={'class': css_class})
     # BoundField でない場合は、そのまま返す
     return field
+
+def hide_none(value):
+    """None を非表示にする"""
+    return "" if value is None else value

@@ -83,10 +83,12 @@
             {% if attendances %}
                 {% for attendance in attendances %}
                 <tr>
+                    {% load custom_filters %}
+
                     <td>{{ attendance.user.username }}</td>
                     <td>{{ attendance.date }}</td>
-                    <td>{{ attendance.check_in }}</td>
-                    <td>{{ attendance.check_out }}</td>
+　　　　　　　　　　　　<td>{{ attendance.check_in|hide_none }}</td>
+　　　　　　　　　　　　<td>{{ attendance.check_out|hide_none }}</td>
                     <td>
                         <form method="post" action=".">
                             {% csrf_token %}
