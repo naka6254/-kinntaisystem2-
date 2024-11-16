@@ -11,6 +11,6 @@ def add_class(field, css_class):
     # BoundField でない場合は、そのまま返す
     return field
 
-def hide_none(value):
-    """None を非表示にする"""
-    return "" if value is None else value
+def display_if_not_empty(value):
+    """値が存在する場合のみ表示"""
+    return value if value else ""

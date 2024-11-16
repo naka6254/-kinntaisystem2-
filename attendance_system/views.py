@@ -169,6 +169,14 @@ def attendance_approval(request):
         
         attendance.save()
 
+        for attendance in attendances:
+          if attendance.date is None or attendance.date == "":
+             attendance.date = None  # 空に戻す
+          if attendance.check_in is None or attendance.check_in == "":
+             attendance.check_in = None  # 空に戻す
+          if attendance.check_out is None or attendance.check_out == "":
+             attendance.check_out = None  # 空に戻す
+
     # 同じテンプレートに出退勤データを渡して再表示
     return render(request, 'attendance_system/attendance_approval.html', {'attendances': attendances})
 
