@@ -32,28 +32,28 @@
             </thead>
             <tbody>
                 {% for attendance in attendances %}
-                <tr>
-                    <td>{{ attendance.user.username }}</td>
-                    <td>{{ attendance.date }}</td>
-                    <td>{{ attendance.check_in }}</td>
-                    <td>{{ attendance.check_out }}</td>
-                    <td>
-                        {% if not attendance.check_in and not attendance.check_out %}
-                            未更新
-                        {% elif attendance.is_approved is None %}
-                            申請中
-                        {% elif attendance.is_approved %}
-                            承認済み
-                        {% else %}
-                            再提出
-                        {% endif %}
-                    </td>
-                
-                    <td>
-                        <!-- 編集ボタンを追加 -->
-                        <a href="{% url 'update_attendance' attendance.id %}" class="btn btn-sm btn-primary">更新</a>
-                    </td>
-                </tr>
+                    {% if attendance.check_in and attendance.check_out %}
+                    <tr>
+                        <td>{{ attendance.user.username }}</td>
+                        <td>{{ attendance.date }}</td>
+                        <td>{{ attendance.check_in }}</td>
+                        <td>{{ attendance.check_out }}</td>
+                        <td>
+                            {% if attendance.is_approved is None %}
+                                申請中
+                            {% elif attendance.is_approved %}
+                                承認済み
+                            {% else %}
+                                再提出
+                            {% endif %}
+                        </td>
+                    
+                        <td>
+                            <!-- 編集ボタンを追加 -->
+                            <a href="{% url 'update_attendance' attendance.id %}" class="btn btn-sm btn-primary">更新</a>
+                        </td>
+                    </tr>
+                    {% endif %}
                 {% endfor %}
             </tbody>
         </table>
