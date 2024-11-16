@@ -148,12 +148,14 @@ def approve_attendance(request, attendance_id):
 def attendance_approval(request):
     # Attendanceモデルから全社員の出退勤データを取得
     attendances = Attendance.objects.all()
+    
     return render(request, 'attendance_system/edit_attendance_admin.html', {'attendances': attendances})
 
 
 @login_required
 def attendance_approval(request):
     attendances = Attendance.objects.all()
+    attendances = Attendance.objects.exclude(user__groups__name='幹部クラス')
 
     if request.method == "POST":
         attendance_id = request.POST.get("attendance_id")
