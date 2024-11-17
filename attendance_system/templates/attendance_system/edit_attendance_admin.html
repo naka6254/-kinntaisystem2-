@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <title>出退勤の承認</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
             margin: 0;
             padding: 0;
+            background-image: url("{% static 'images/AAF728A9-0ADB-4433-B320-347DB491300Fbackground.jpg' %}"); /* 背景画像を指定 */
+            background-size: cover; /* 背景を画面全体にフィット */
+            background-position: center; /* 背景を中央に配置 */
+            background-repeat: no-repeat; /* 繰り返さない */
+            min-height: 100vh; /* 画面全体の高さ */
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             flex-direction: column;
+            color: #333;
         }
         h2 {
             margin: 20px 0;
@@ -22,7 +26,7 @@
         table {
             width: 80%;
             border-collapse: collapse;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.9); /* 半透明の背景 */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin: 20px 0;
         }
@@ -36,68 +40,7 @@
             color: white;
         }
         tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            margin: 2px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        a {
-            text-decoration: none;
-            color: #4CAF50;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>出退勤の承認</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-        }
-        h2 {
-            margin: 20px 0;
-        }
-        table {
-            width: 80%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin: 20px 0;
-        }
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: rgba(0, 0, 0, 0.05);
         }
         button {
             background-color: #4CAF50;

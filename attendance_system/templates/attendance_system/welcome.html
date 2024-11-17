@@ -3,23 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>ウェルカムページ</title>
+    {% load static %} <!-- static タグを利用するためにロードする -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'images/55929774-EE3B-485F-93A8-32A319ACCF4Abackground.jpg' %}"); /* static タグを使用 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
-    <div class="container text-center mt-5">
-
-        <!-- メッセージ表示部分 -->
-        {% if messages %}
-            <div class="alert alert-success" role="alert">
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            </div>
-        {% endif %}
-        <!-- メッセージ表示部分終了 -->
-
+    <div class="container">
         <h1>ようこそ！</h1>
-        <p>このサイトへようこそ。勤怠管理システムにアクセスするにはログインしてください。</p>
+        <p>勤怠管理システムにアクセスするにはログインしてください。</p>
         <a href="{% url 'login' %}" class="btn btn-primary">ログイン</a>
         <a href="{% url 'register' %}" class="btn btn-primary">新規登録</a>
     </div>

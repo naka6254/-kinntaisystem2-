@@ -1,45 +1,66 @@
-<h2 class="mb-4">出席情報の更新</h2>
-<form method="post" class="p-4 border rounded bg-light">
-    {% csrf_token %}
-
-    {% if form.non_field_errors %}
-    <div class="alert alert-danger">
-        {{ form.non_field_errors|join:"<br>" }}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出退勤の更新</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'images/AAF728A9-0ADB-4433-B320-347DB491300Fbackground.jpg' %}"); /* 背景画像を指定 */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="mb-4 text-center">出退勤の更新</h2>
+        <form method="post" class="p-4 border rounded bg-light">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_check_in" class="form-label">出勤時間:</label>
+                {{ form.check_in }}
+            </div>
+            <div class="mb-3">
+                <label for="id_check_out" class="form-label">退勤時間:</label>
+                {{ form.check_out }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">保存</button>
+            <div class="text-center mt-4">
+                <a href="{% url 'attendance' %}" class="btn btn-secondary">戻る</a>
+            </div>
+        </form>
     </div>
-    {% endif %}
-
-    <div class="mb-3">
-        <label for="id_check_in" class="form-label">出勤時間:</label>
-        {{ form.check_in }}
-    </div>
-
-    <div class="mb-3">
-        <label for="id_check_out" class="form-label">退勤時間:</label>
-        {{ form.check_out }}
-    </div>
-
-    <button type="submit" class="btn btn-primary">保存</button>
-    <div class="text-center mt-4">
-        <a href="{% url 'attendance' %}" class="btn btn-primary">戻る</a>
-    </div>
-
-</form>
-
-
-<!-- Flatpickr の JavaScriptとCSSを読み込む -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-<!-- Flatpickr を id_check_in と id_check_out に適用 -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        flatpickr("#id_check_in", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            flatpickr("#id_check_in", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+            });
+            flatpickr("#id_check_out", {
+                enableTime: true,
+                dateFormat: "Y-m-d H:i",
+            });
         });
-        flatpickr("#id_check_out", {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-        });
-    });
-</script>
+    </script>
+</body>
+</html>
