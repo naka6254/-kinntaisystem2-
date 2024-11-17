@@ -49,12 +49,18 @@
         button:hover {
             background-color: #45a049;
         }
-        a {
+        a.button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
             text-decoration: none;
-            color: #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
-        a:hover {
-            text-decoration: underline;
+        a.button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
@@ -107,6 +113,9 @@
         
     </table>
 
-    <p><a href="{% url 'attendance' %}">出勤管理画面に戻る</a></p>
+    <!-- 出勤管理画面に戻るボタン -->
+    <p>
+        <a href="{% url 'attendance' %}" class="button">出勤管理画面に戻る</a>
+    </p>
 </body>
 </html>
