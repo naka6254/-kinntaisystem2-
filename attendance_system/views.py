@@ -75,6 +75,12 @@ def attendance_view(request):
         'is_employee': is_employee,
     })
 
+def edit_attendance_manager(request, id):
+    attendance = get_object_or_404(Attendance, id=id)
+    # 編集処理を記述
+    return render(request, 'edit_attendance_manager.html', {'attendance': attendance})
+
+
 @login_required
 def edit_attendance(request, attendance_id):
     user = request.user
@@ -126,7 +132,8 @@ def update_attendance(request, id):
     else:
         form = AttendanceForm(instance=attendance)
 
-    return render(request, 'update_attendance.html', {'form': form})  
+    return render(request, 'update_attendance.html', {'form': form, 'attendance': attendance})
+
     
 def approve_attendance(request, attendance_id):  
     

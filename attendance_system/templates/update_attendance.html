@@ -43,10 +43,12 @@
                 <label for="id_check_out" class="form-label">退勤時間:</label>
                 {{ form.check_out }}
             </div>
-            <button type="submit" class="btn btn-primary w-100">保存</button>
-            <div class="text-center mt-4">
-                <a href="{% url 'attendance' %}" class="btn btn-secondary">戻る</a>
+            <div class="d-flex justify-content-between gap-3 mt-4">
+                <button type="submit" class="btn btn-primary flex-fill">保存</button>
+                <a href="{% url 'edit_attendance' attendance.id %}" class="btn btn-secondary flex-fill" role="button">出勤情報一覧</a>
+                <a href="{% url 'attendance' %}" class="btn btn-secondary flex-fill" role="button">戻る</a>
             </div>
+            
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
