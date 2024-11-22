@@ -102,6 +102,9 @@
                             <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
                             <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">承認</button>
                             <button type="submit" name="action" value="resubmit" class="btn btn-warning btn-sm">再提出</button>
+                            {% if user.is_superuser %}
+                            <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm" onclick="return confirm('この出退勤情報を削除しますか？');">削除</button>
+                            {% endif %}
                         </form>
                     </td>
                     <td>{{ attendance.status_display }}</td>

@@ -140,12 +140,14 @@ def approve_attendance(request, attendance_id):
     attendance = get_object_or_404(Attendance, id=attendance_id)
 
     if request.method == 'POST':
+       
         if 'approve' in request.POST:
             attendance.is_approved = True  # 承認済みに設定
             attendance.save()
         elif 'resubmit' in request.POST:
             attendance.is_approved = False  # 再提出に設定
             attendance.save()
+       
             
     return redirect('attendance')
 
@@ -175,5 +177,8 @@ def attendance_approval(request):
         elif action == "resubmit":
             attendance.reject()
             messages.warning(request, f"{attendance.user.username} さんの出退勤が再提出されました。")
+        elif action == "delete" and request.user.is_superuser:
+            attendance.delete()
+            messages.success(request, "出退勤情報が削除されました。")
 
     return render(request, "attendance_system/attendance_approval.html", {"attendances": attendances})
