@@ -17,9 +17,21 @@ class AttendanceEditForm(forms.ModelForm):
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
+    username = forms.CharField(
+        max_length=150,
+        required=True,
+        help_text=None,  # ヘルプテキストを非表示
+    )
+    
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2'] 
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # username フィールドのバリデーションを削除
+        self.fields['username'].validators = []
+
 class CustomUserChangeForm(UserChangeForm):
     password1 = forms.CharField(
         label="新しいパスワード",
