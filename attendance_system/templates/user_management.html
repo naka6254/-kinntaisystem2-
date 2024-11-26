@@ -1,0 +1,30 @@
+<h1>ユーザー管理</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ユーザー名</th>
+            <th>メールアドレス</th>
+            <th>グループ</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                {% for group in user.groups.all %}
+                {{ group.name }}
+                {% empty %}
+                グループなし
+                {% endfor %}
+            </td>
+            <td>
+                <a href="{% url 'change_user_permissions' user.id %}">権限変更</a> |
+                <a href="{% url 'delete_user' user.id %}">削除</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

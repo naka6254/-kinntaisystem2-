@@ -9,8 +9,44 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import AttendanceForm
+from django.contrib.auth import logout
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
+from django.conf import settings
+from django.contrib.auth.models import User, Group
+
+class ProtectedPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'attendance_system/protected_page.html'
+    login_url = '/custom-login/'  # 未ログイン時のリダイレクトURL
+
+@login_required(login_url=settings.LOGIN_URL)
+def attendance_view(request):
+    return HttpResponse(f"ログイン中のユーザー: {request.user.username}")
 
 
+@login_required(login_url='/custom-login/')  # 未ログイン時にリダイレクト
+def attendance_view(request):
+    return HttpResponse("ログインしているユーザーだけがこのページを見られます。")
+
+def login_view(request):
+    user = authenticate(request, username='testuser', password='password')
+    if user is not None:
+        login(request, user)
+        return HttpResponse("ログイン成功")
+    else:
+        return HttpResponse("ログイン失敗")
+
+
+@login_required(login_url='/custom-login/')
+def attendance_view(request):
+    return HttpResponse("ログインしているユーザーだけがこのページを見られます。")
+
+
+def logout_view(request):
+    logout(request)  # セッション情報をクリア
+    return redirect('login')  # ログインページへリダイレクト
 
 def register(request):
     if request.method == 'POST':
@@ -74,7 +110,7 @@ def attendance_view(request):
         'is_manager': is_manager,
         'is_employee': is_employee,
     })
-
+@login_required
 def edit_attendance_manager(request, id):
     attendance = get_object_or_404(Attendance, id=id)
     # 編集処理を記述
@@ -119,7 +155,7 @@ def edit_attendance(request, attendance_id):
     else:
         messages.error(request, "編集権限がありません。")
         return redirect('attendance_approval')
-
+@login_required
 def update_attendance(request, id):
     attendance = get_object_or_404(Attendance, id=id)
 
@@ -134,7 +170,7 @@ def update_attendance(request, id):
 
     return render(request, 'update_attendance.html', {'form': form, 'attendance': attendance})
 
-    
+@login_required    
 def approve_attendance(request, attendance_id):  
     
     attendance = get_object_or_404(Attendance, id=attendance_id)
@@ -182,3 +218,67 @@ def attendance_approval(request):
             messages.success(request, "出退勤情報が削除されました。")
 
     return render(request, "attendance_system/attendance_approval.html", {"attendances": attendances})
+
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='幹部クラス').exists())
+def change_user_permissions(request, user_id):
+    user = get_object_or_404(User, id=user_id)  # 指定された ID のユーザーを取得
+    groups = Group.objects.all()  # 全グループを取得
+
+    if request.method == 'POST':
+        selected_group_ids = request.POST.getlist('groups')  # 選択されたグループIDを取得
+        selected_groups = Group.objects.filter(id__in=selected_group_ids)  # 対象グループを取得
+
+        # 現在のグループをクリアして新しいグループを設定
+        user.groups.clear()
+        user.groups.add(*selected_groups)
+
+        messages.success(request, f"{user.username} の権限を変更しました。")
+        return redirect('user_management')  # 権限変更後にユーザー管理画面へリダイレクト
+
+    return render(request, 'attendance_system/change_permissions.html', {
+        'user': user,
+        'groups': groups,
+    })
+
+@login_required
+def attendance_view(request):
+    user = request.user
+    today = timezone.now().date()
+
+    # 今日の出勤データを取得（または作成）
+    attendance, created = Attendance.objects.get_or_create(user=user, date=today)
+
+    if request.method == 'POST':
+        # 出退勤の処理を実施
+        pass
+
+    # 役職情報をテンプレートに渡す
+    is_admin = user.groups.filter(name='幹部クラス').exists()
+
+    return render(request, 'attendance_system/attendance.html', {
+        'user': user,  # 必要なユーザー情報を渡す
+        'attendance': attendance,
+        'is_admin': is_admin,
+    })
+
+@login_required
+@user_passes_test(lambda u: u.groups.filter(name='幹部クラス').exists())
+def change_user_permissions(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    groups = Group.objects.all()
+
+    if request.method == 'POST':
+        selected_group_ids = request.POST.getlist('groups')
+        selected_groups = Group.objects.filter(id__in=selected_group_ids)
+
+        user.groups.clear()
+        user.groups.add(*selected_groups)
+
+        messages.success(request, f"{user.username} の権限を変更しました。")
+        return redirect('attendance')
+
+    return render(request, 'attendance_system/change_permissions.html', {
+        'user': user,
+        'groups': groups,
+    })

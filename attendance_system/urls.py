@@ -33,4 +33,7 @@ urlpatterns = [
     path('attendance/edit/<int:id>/', views.edit_attendance, name='edit_attendance'),
     path('attendance/update/<int:id>/', views.update_attendance, name='update_attendance'),
     path('attendance/manager/edit/<int:id>/', views.edit_attendance_manager, name='edit_attendance_manager'),
+    path('change-permissions/<int:user_id>/', views.change_user_permissions, name='change_user_permissions'),
+
 ]
+

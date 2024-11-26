@@ -139,11 +139,17 @@ STATICFILES_DIRS = [
     BASE_DIR / "attendance_system/static",  # `attendance_system/static` ディレクトリを使用
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_URL = '/welcome/'  # 未ログイン時にリダイレクトするログインページのURL
+
 
 LOGIN_REDIRECT_URL = 'attendance'  # ログイン後のリダイレクト先
 LOGOUT_REDIRECT_URL = 'welcome'  # ログアウト後のリダイレクト先
