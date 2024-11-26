@@ -266,19 +266,23 @@ def attendance_view(request):
 @user_passes_test(lambda u: u.groups.filter(name='幹部クラス').exists())
 def change_user_permissions(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    groups = Group.objects.all()
+    groups = Group.objects.all()  # すべての役職を取得
 
     if request.method == 'POST':
-        selected_group_ids = request.POST.getlist('groups')
-        selected_groups = Group.objects.filter(id__in=selected_group_ids)
+        selected_group_id = request.POST.get('group')  # フォームデータから役職IDを取得
 
-        user.groups.clear()
-        user.groups.add(*selected_groups)
+        if selected_group_id:  # 選択された役職が存在する場合
+            selected_group = get_object_or_404(Group, id=selected_group_id)
+            user.groups.clear()  # 現在の役職をクリア
+            user.groups.add(selected_group)  # 新しい役職を設定
+            messages.success(request, f"{user.username} の役職を {selected_group.name} に変更しました。")
+        else:
+            messages.error(request, "役職を選択してください。")
 
-        messages.success(request, f"{user.username} の権限を変更しました。")
-        return redirect('attendance')
+        return redirect('change_user_permissions', user_id=user.id)
 
     return render(request, 'attendance_system/change_permissions.html', {
         'user': user,
         'groups': groups,
+        'all_users': User.objects.all(),  # 全社員リスト
     })
