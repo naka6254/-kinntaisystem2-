@@ -241,26 +241,7 @@ def change_user_permissions(request, user_id):
         'groups': groups,
     })
 
-@login_required
-def attendance_view(request):
-    user = request.user
-    today = timezone.now().date()
 
-    # 今日の出勤データを取得（または作成）
-    attendance, created = Attendance.objects.get_or_create(user=user, date=today)
-
-    if request.method == 'POST':
-        # 出退勤の処理を実施
-        pass
-
-    # 役職情報をテンプレートに渡す
-    is_admin = user.groups.filter(name='幹部クラス').exists()
-
-    return render(request, 'attendance_system/attendance.html', {
-        'user': user,  # 必要なユーザー情報を渡す
-        'attendance': attendance,
-        'is_admin': is_admin,
-    })
 
 @login_required
 @user_passes_test(lambda u: u.groups.filter(name='幹部クラス').exists())
