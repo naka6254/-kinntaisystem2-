@@ -1,7 +1,60 @@
-<h1>{{ user.username }} を削除</h1>
-<p>本当にこのユーザーを削除しますか？</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">削除する</button>
-</form>
-<a href="{% url 'user_management' %}">キャンセル</a>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社員の削除</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- タイトル -->
+        <h1 class="mb-4 text-center">社員リスト</h1>
+
+        <!-- フラッシュメッセージ -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- 社員リスト -->
+        <div class="card mb-5">
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for employee in all_users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <!-- 社員名 -->
+                            <span>
+                                {{ employee.username }}
+                                {% if employee.groups.first %}
+                                    ({{ employee.groups.first.name }})
+                                {% endif %}
+                            </span>
+                            <!-- 削除ボタン -->
+                            <form action="{% url 'delete_user' employee.id %}" method="POST" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- 戻るボタン -->
+        <div class="text-center">
+            <a href="{% url 'attendance' %}" class="btn btn-primary">出勤管理画面に戻る</a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

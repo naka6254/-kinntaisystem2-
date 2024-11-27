@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views 
 from django.urls import path
 from . import views
+from .views import delete_user_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +35,7 @@ urlpatterns = [
     path('attendance/update/<int:id>/', views.update_attendance, name='update_attendance'),
     path('attendance/manager/edit/<int:id>/', views.edit_attendance_manager, name='edit_attendance_manager'),
     path('change-permissions/<int:user_id>/', views.change_user_permissions, name='change_user_permissions'),
-
+     path('user/<int:user_id>/delete/', delete_user_view, name='delete_user'),
+    path('delete_user/', delete_user_view, name='delete_user_view'),  # 任意でリスト表示用も追加可能
 ]
 

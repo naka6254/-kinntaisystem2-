@@ -286,3 +286,21 @@ def change_user_permissions(request, user_id):
         'groups': groups,
         'all_users': User.objects.all(),  # 全社員リスト
     })
+
+
+@login_required
+def delete_user_view(request, user_id=None):
+    if user_id:  # 指定されたユーザーIDがある場合
+        user = get_object_or_404(User, id=user_id)  # 該当ユーザーを取得
+        if request.method == "POST":  # POSTリクエストで削除を実行
+            username = user.username
+            user.delete()
+            messages.success(request, f"ユーザー {username} が削除されました。")
+            return redirect('delete_user_view')  # ユーザー一覧にリダイレクト
+
+    # 全ユーザーを取得してテンプレートに渡す
+    all_users = User.objects.all().order_by('username')
+    context = {
+        'all_users': all_users
+    }
+    return render(request, 'delete_user.html', context)
