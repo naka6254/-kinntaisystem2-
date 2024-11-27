@@ -14,10 +14,10 @@
             align-items: center;
             min-height: 100vh;
             flex-direction: column;
-            background-image: url("{% static 'images/AAF728A9-0ADB-4433-B320-347DB491300Fbackground.jpg' %}"); /* 背景画像を指定 */
-            background-size: cover; /* 背景を画面全体にフィット */
-            background-position: center; /* 背景を中央揃え */
-            background-repeat: no-repeat; /* 背景を繰り返さない */
+            background-image: url("{% static 'images/AAF728A9-0ADB-4433-B320-347DB491300Fbackground.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         h2 {
             margin: 20px 0;
@@ -102,9 +102,8 @@
                             <input type="hidden" name="attendance_id" value="{{ attendance.id }}">
                             <button type="submit" name="action" value="approve" class="btn btn-success btn-sm">承認</button>
                             <button type="submit" name="action" value="resubmit" class="btn btn-warning btn-sm">再提出</button>
-                            {% if user.is_superuser %}
                             <button type="submit" name="action" value="delete" class="btn btn-danger btn-sm" onclick="return confirm('この出退勤情報を削除しますか？');">削除</button>
-                            {% endif %}
+                            
                         </form>
                     </td>
                     <td>{{ attendance.status_display }}</td>

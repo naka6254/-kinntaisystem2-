@@ -213,7 +213,7 @@ def attendance_approval(request):
         elif action == "resubmit":
             attendance.reject()
             messages.warning(request, f"{attendance.user.username} さんの出退勤が再提出されました。")
-        elif action == "delete" and request.user.is_superuser:
+        elif action == "delete":
             attendance.delete()
             messages.success(request, "出退勤情報が削除されました。")
 
