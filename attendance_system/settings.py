@@ -56,7 +56,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'attendance_system.middleware.LoginRequiredMiddleware',  # ここに追加
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # デフォルト
+SESSION_COOKIE_AGE = 1209600  # 2週間
 
 ROOT_URLCONF = 'attendance_system.urls'
 
@@ -148,10 +152,10 @@ AUTHENTICATION_BACKENDS = [
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_URL = '/welcome/'  # 未ログイン時にリダイレクトするログインページのURL
+LOGIN_URL = '/login/'  # 未ログイン時にリダイレクトするログインページのURL
 
 
-LOGIN_REDIRECT_URL = 'attendance'  # ログイン後のリダイレクト先
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = 'welcome'  # ログアウト後のリダイレクト先
 
 

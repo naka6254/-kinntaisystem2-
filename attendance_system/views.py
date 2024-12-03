@@ -1,52 +1,50 @@
 # attendance_system/views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login
 from .forms import CustomUserCreationForm, CustomUserChangeForm, AttendanceEditForm
 from .models import Attendance
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import AttendanceForm
-from django.contrib.auth import logout
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView
-from django.conf import settings
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+import logging
 
-class ProtectedPageView(LoginRequiredMixin, TemplateView):
-    template_name = 'attendance_system/protected_page.html'
-    login_url = '/custom-login/'  # 未ログイン時のリダイレクトURL
+logger = logging.getLogger(__name__)
 
-@login_required(login_url=settings.LOGIN_URL)
-def attendance_view(request):
-    return HttpResponse(f"ログイン中のユーザー: {request.user.username}")
+@login_required
+def debug_view(request):
+    return JsonResponse({"is_authenticated": request.user.is_authenticated})
 
-
-@login_required(login_url='/custom-login/')  # 未ログイン時にリダイレクト
-def attendance_view(request):
-    return HttpResponse("ログインしているユーザーだけがこのページを見られます。")
 
 def login_view(request):
-    user = authenticate(request, username='testuser', password='password')
-    if user is not None:
-        login(request, user)
-        return HttpResponse("ログイン成功")
-    else:
-        return HttpResponse("ログイン失敗")
+    next_url = request.GET.get('next', '/attendance/')  # next_urlが指定されていない場合、'/attendance/' にリダイレクト
 
-
-@login_required(login_url='/custom-login/')
-def attendance_view(request):
-    return HttpResponse("ログインしているユーザーだけがこのページを見られます。")
+    form = AuthenticationForm(request, data=request.POST or None)  # フォームインスタンスを作成
+    if request.method == 'POST':
+        if form.is_valid():  # フォームの検証
+            user = form.get_user()  # フォームから認証されたユーザーを取得
+            login(request, user)  # ユーザーをログイン
+            return redirect(next_url)  # next_url（もしくはデフォルトでattendanceページ）にリダイレクト
+        else:
+            messages.error(request, 'ユーザー名またはパスワードが正しくありません。')  # 認証エラー
+    return render(request, 'attendance_system/login.html', {'form': form, 'next': next_url})
 
 
 def logout_view(request):
-    logout(request)  # セッション情報をクリア
-    return redirect('login')  # ログインページへリダイレクト
+    if request.user.is_authenticated:
+        logger.info(f"User {request.user.username} logged out")
+    logout(request)
+    request.session.flush()
+    return redirect('/')
+
+
 
 def register(request):
     if request.method == 'POST':

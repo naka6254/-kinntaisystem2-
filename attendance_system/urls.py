@@ -19,12 +19,14 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
 from .views import delete_user_view
+from .views import login_view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.welcome, name='welcome'),
-    path('login/', auth_views.LoginView.as_view(template_name='attendance_system/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'), 
+     path('login/', login_view, name='login'),  # 'login' の名前付きURLを設定
+    path('logout/', views.logout_view, name='logout'),
     path('register/', views.register, name='register'), 
     path('attendance/', views.attendance_view, name='attendance'),
     path('update_profile/', views.update_profile, name='update_profile'), 
