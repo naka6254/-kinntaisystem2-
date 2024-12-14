@@ -8,7 +8,7 @@ class LoginRequiredMiddleware:
 
     def __call__(self, request):
         # ログイン不要なURL（'welcome'と'login'）
-        excluded_urls = ['welcome', 'login']
+        excluded_urls = ['welcome', 'login', 'register']
         current_url_name = resolve(request.path_info).url_name
 
         # 未ログインかつ保護されたURLにアクセスした場合、リダイレクト

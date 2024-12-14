@@ -47,6 +47,8 @@ def logout_view(request):
 
 
 def register(request):
+    if request.user.is_authenticated:  # すでにログインしている場合
+        return redirect('attendance')  # 出勤管理画面（または他の適切な画面）にリダイレクト
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
